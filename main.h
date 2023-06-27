@@ -1,9 +1,11 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include <conio.h>
 #include <chrono>
 #include <thread>
 #include <Windows.h>
+#include <vector>
+
 
 
 #define esc 27
@@ -47,12 +49,12 @@ void ClearScreen() {
 
 class SnakeGame {
 private:
-	enum Direction
-	{
+	enum Direction {
 		STOP = 0,
 		LEFT, RIGHT, UP, DOWN
 
 	};
+
 	Direction SnakeDirection;
 	const int Height, Width;
 	int Snake_x[100], Snake_y[100];
@@ -60,6 +62,8 @@ private:
 	int SnakeBodyCount, SnakeMaxLen, speeed;
 	bool GameOver;
 	bool BodyPrintFlag;
+	std::vector<std::pair<int, int>> pos;
+
 
 	void Controller();
 	void SetUp();
@@ -89,7 +93,6 @@ SnakeGame::SnakeGame() : Height(22), Width(80) {
 	SnakeHead_y = 0;
 	Fruit_x = 0;
 	Fruit_y = 0;
-
 
 	for (int i = 0; i < SnakeMaxLen; i++) {
 		Snake_x[i] = 0;
@@ -255,14 +258,14 @@ void SnakeGame::Stage() {
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			if (j == 0) std::cout << "||";
-			if (i == SnakeHead_y && j == SnakeHead_x) std::cout << "$";
+			if (i == SnakeHead_y && j == SnakeHead_x) std::cout << "X";
 
 			else if (i == Fruit_y && j == Fruit_x) std::cout << "#";
 
 			else {
 				BodyPrintFlag = false;
 				for (int k = 0; k < SnakeBodyCount; k++) {
-					if (Snake_x[k] == j && Snake_y[k] == i) {
+					if (pos[k].first == j && pos[k].second == i) {
 						std::cout << "O";
 						BodyPrintFlag = true;
 					}
@@ -284,26 +287,7 @@ void SnakeGame::Stage() {
 
 void SnakeGame::Playing() {
 
-	int prevX = Snake_x[0];
-	int prevY = Snake_y[0];
-
-	int prev2X, prev2Y;
-
-
-	Snake_x[0] = SnakeHead_x;
-	Snake_y[0] = SnakeHead_y;
-
-
-	for (int i = 1; i < SnakeBodyCount; i++) {
-		prev2X = Snake_x[i];
-		prev2Y = Snake_y[i];
-
-		Snake_x[i] = prevX;
-		Snake_y[i] = prevY;
-
-		prevX = prev2X;
-		prevY = prev2Y;
-	}
+	pos.insert(pos.begin(), std::make_pair(SnakeHead_x, SnakeHead_y));
 
 	switch (SnakeDirection) {
 	case 1:
@@ -332,7 +316,9 @@ void SnakeGame::Playing() {
 
 
 	for (int i = 0; i < SnakeBodyCount; i++) {
-		if (Snake_x[i] == SnakeHead_x && Snake_y[i] == SnakeHead_y) GameOver = true;
+
+		if (pos[i].first == SnakeHead_x && pos[i].second == SnakeHead_y) GameOver = true;
+
 	}
 
 

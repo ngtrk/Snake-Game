@@ -1,5 +1,8 @@
 #include "main.h"
 #include <windows.h>
+#include <vector>
+
+
 
 void ShowConsoleCursor(bool showFlag)
 {
@@ -17,6 +20,7 @@ int main() {
     ShowConsoleCursor(false);
 	SnakeGame snake;
 	snake.Start();
+
 	return 0;
 }
 
