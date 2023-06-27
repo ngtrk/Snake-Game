@@ -13,6 +13,8 @@
 #define KEY_DOWN 80
 #define KEY_LEFT 75
 #define KEY_RIGHT 77
+#define SPEED 300
+
 
 void cls()
 {
@@ -57,7 +59,6 @@ private:
 
 	Direction SnakeDirection;
 	const int Height, Width;
-	int Snake_x[100], Snake_y[100];
 	int SnakeHead_x, SnakeHead_y, Fruit_x, Fruit_y;
 	int SnakeBodyCount, SnakeMaxLen, speeed;
 	bool GameOver;
@@ -82,11 +83,11 @@ public:
 };
 
 
-SnakeGame::SnakeGame() : Height(22), Width(80) {
+SnakeGame::SnakeGame() : Height(25), Width(60) {
 	SnakeDirection = STOP;
 	SnakeBodyCount = 0;
 	SnakeMaxLen = 100;
-	speeed = 600;
+	speeed = SPEED;
 	GameOver = false;
 	BodyPrintFlag = false;
 	SnakeHead_x = 0;
@@ -94,10 +95,8 @@ SnakeGame::SnakeGame() : Height(22), Width(80) {
 	Fruit_x = 0;
 	Fruit_y = 0;
 
-	for (int i = 0; i < SnakeMaxLen; i++) {
-		Snake_x[i] = 0;
-		Snake_y[i] = 0;
-	}
+
+
 }
 
 
@@ -118,13 +117,15 @@ void SnakeGame::Prepare(){
 
 void SnakeGame::SetUp() {
 	GameOver = false;
-	SnakeDirection = STOP;
-	SnakeBodyCount = 0;
-	speeed = 600;
+	SnakeDirection = RIGHT;
+	SnakeBodyCount = 1;
+	speeed = SPEED;
 	SnakeHead_x = Width / 2;
 	SnakeHead_y = Height / 2;
 	Fruit_x = rand() % (Width - 1) + 1;
 	Fruit_y = rand() % (Height - 1) + 1;
+
+	pos.insert(pos.begin(), std::make_pair(SnakeHead_x - 1, SnakeHead_y));
 }
 
 
@@ -151,7 +152,7 @@ void SnakeGame::DisplayGameOver() {
 	std::cout << " ||                                                                       ||\n";
 	std::cout << " ||                                                                       ||\n";
 	std::cout << " ===========================================================================\n";
-
+	_getch();
 }
 
 void SnakeGame::DisplayInstructions() {}
@@ -222,7 +223,7 @@ void SnakeGame::Start() {
 			DisplayGameOver();
 			_getch();
 			break;
-
+			
 		case '2':
 			DisplayInstructions();
 			_getch();
@@ -288,6 +289,7 @@ void SnakeGame::Stage() {
 void SnakeGame::Playing() {
 
 	pos.insert(pos.begin(), std::make_pair(SnakeHead_x, SnakeHead_y));
+	pos.pop_back();
 
 	switch (SnakeDirection) {
 	case 1:
@@ -316,7 +318,6 @@ void SnakeGame::Playing() {
 
 
 	for (int i = 0; i < SnakeBodyCount; i++) {
-
 		if (pos[i].first == SnakeHead_x && pos[i].second == SnakeHead_y) GameOver = true;
 
 	}
@@ -331,7 +332,8 @@ void SnakeGame::Playing() {
 		Fruit_x = rand() % (Width - 1) + 1;
 		Fruit_y = rand() % (Height - 1) + 1;
 		SnakeBodyCount += 1;
-		speeed -= 10;
+		pos.insert(pos.end(), std::make_pair(SnakeHead_x, SnakeHead_y));
+		speeed -= 5;
 	}
 
 
