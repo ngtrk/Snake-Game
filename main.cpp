@@ -1,7 +1,5 @@
 #include "main.h"
 #include <windows.h>
-#include <vector>
-
 
 
 void ShowConsoleCursor(bool showFlag)

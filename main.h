@@ -13,7 +13,7 @@
 #define KEY_DOWN 80
 #define KEY_LEFT 75
 #define KEY_RIGHT 77
-#define SPEED 300
+#define SPEED 69
 
 
 void cls()
@@ -60,7 +60,7 @@ private:
 	Direction SnakeDirection;
 	const int Height, Width;
 	int SnakeHead_x, SnakeHead_y, Fruit_x, Fruit_y;
-	int SnakeBodyCount, SnakeMaxLen, speeed;
+	int SnakeBodyCount, speeed;
 	bool GameOver;
 	bool BodyPrintFlag;
 	std::vector<std::pair<int, int>> pos;
@@ -86,7 +86,6 @@ public:
 SnakeGame::SnakeGame() : Height(25), Width(60) {
 	SnakeDirection = STOP;
 	SnakeBodyCount = 0;
-	SnakeMaxLen = 100;
 	speeed = SPEED;
 	GameOver = false;
 	BodyPrintFlag = false;
@@ -94,9 +93,6 @@ SnakeGame::SnakeGame() : Height(25), Width(60) {
 	SnakeHead_y = 0;
 	Fruit_x = 0;
 	Fruit_y = 0;
-
-
-
 }
 
 
@@ -155,7 +151,29 @@ void SnakeGame::DisplayGameOver() {
 	_getch();
 }
 
-void SnakeGame::DisplayInstructions() {}
+void SnakeGame::DisplayInstructions() {
+	std::cout << " ===========================================================================\n";
+	std::cout << " ||                                                                       ||\n";
+	std::cout << " ||                           *Instructions*                              ||\n";
+	std::cout << " ||                                                                       ||\n";
+	std::cout << " ||                                                                       ||\n";
+	std::cout << " ||                                           ____                        ||\n";
+	std::cout << " ||                  ________________________/ O  \\___/                   ||\n";
+	std::cout << " ||                 <_____________________________/   \\                   ||\n";
+	std::cout << " ||                                                                       ||\n";
+	std::cout << " ||                                                                       ||\n";
+	std::cout << " ||             1. KEY ARROWS to change direction of the Snake.           ||\n";
+	std::cout << " ||             2. Eat the Fruit to Make the Snake Grow. With             ||\n";
+	std::cout << " ||                each fruit 10 Points will be Added to the              ||\n";
+	std::cout << " ||                score.                                                 ||\n";
+	std::cout << " ||             3. If Snake eats itself, game will be over.               ||\n";
+	std::cout << " ||                                                                       ||\n";
+	std::cout << " ||                                                                       ||\n";
+	std::cout << " ||                  PRESS ANY KEY TO RETURN TO MENU                      ||\n";
+	std::cout << " ||                                                                       ||\n";
+	std::cout << " ||                                                                       ||\n";
+	std::cout << " ===========================================================================\n";
+}
 
 
 
@@ -181,9 +199,6 @@ void SnakeGame::Controller() {
 
 		case esc:
 			system("pause > nul");
-			break;
-
-		default:
 			break;
 		}
 
@@ -240,9 +255,6 @@ void SnakeGame::Start() {
 				exit(-1);
 			}
 			break;
-
-		default:
-			break;
 		}
 	}
 }
@@ -290,7 +302,7 @@ void SnakeGame::Playing() {
 
 	pos.insert(pos.begin(), std::make_pair(SnakeHead_x, SnakeHead_y));
 	pos.pop_back();
-
+	
 	switch (SnakeDirection) {
 	case 1:
 		SnakeHead_x--;
@@ -304,12 +316,9 @@ void SnakeGame::Playing() {
 	case 4:
 		SnakeHead_y++;
 		break;
-	default:
-		break;
-
 	}
-
-
+	
+	
 	if (SnakeHead_x >= Width) SnakeHead_x = 0;
 	else if (SnakeHead_x < 0) SnakeHead_x = Width - 1;
 
@@ -322,18 +331,12 @@ void SnakeGame::Playing() {
 
 	}
 
-
-	if (SnakeBodyCount > SnakeMaxLen) {
-		GameOver = true;
-	}
-
-
 	if (SnakeHead_x == Fruit_x && SnakeHead_y == Fruit_y) {
 		Fruit_x = rand() % (Width - 1) + 1;
 		Fruit_y = rand() % (Height - 1) + 1;
 		SnakeBodyCount += 1;
 		pos.insert(pos.end(), std::make_pair(SnakeHead_x, SnakeHead_y));
-		speeed -= 5;
+		speeed -= 2;
 	}
 
 
